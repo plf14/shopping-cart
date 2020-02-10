@@ -1,9 +1,9 @@
 # shopping_cart.py
 
-import datetime
-from dotenv import load_dotenv
+import datetime #Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
+from dotenv import load_dotenv #Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 import os
-load_dotenv() #> loads contents of the .env file into the script's environment
+load_dotenv()
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -37,6 +37,41 @@ def to_usd(my_price):
     Returns: $4,000.44
     """
     return f"${my_price:,.2f}" #> $12,000.71
+
+import gspread #Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md for help with Google Sheets
+from oauth2client.service_account import ServiceAccountCredentials
+
+DOCUMENT_ID = os.environ.get("GOOGLE_SHEET_ID", "OOPS")
+SHEET_NAME = os.environ.get("SHEET_NAME", "Products")
+
+#
+# AUTHORIZATION
+#
+
+CREDENTIALS_FILEPATH = os.path.join(os.path.dirname(__file__), "auth", "spreadsheet_credentials.json")
+
+AUTH_SCOPE = [
+    "https://www.googleapis.com/auth/spreadsheets", #> Allows read/write access to the user's sheets and their properties.
+    "https://www.googleapis.com/auth/drive.file" #> Per-file access to files created or opened by the app.
+]
+
+credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILEPATH, AUTH_SCOPE)
+
+#
+# READ SHEET VALUES
+#
+
+client = gspread.authorize(credentials) #> <class 'gspread.client.Client'>
+
+doc = client.open_by_key(DOCUMENT_ID) #> <class 'gspread.models.Spreadsheet'>
+
+print("-----------------")
+print("SPREADSHEET:", doc.title)
+print("-----------------")
+
+sheet = doc.worksheet(SHEET_NAME) #> <class 'gspread.models.Worksheet'>
+
+products = sheet.get_all_records() #> <class 'list'>
 
 print("Please input a product identifier.  Type 'DONE' when finished.")
 condition = True
