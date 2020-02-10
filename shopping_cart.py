@@ -1,6 +1,9 @@
 # shopping_cart.py
 
 import datetime
+from dotenv import load_dotenv
+import os
+load_dotenv() #> loads contents of the .env file into the script's environment
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -66,9 +69,10 @@ for MatchedID in SelectedIDs:
     Prices.append(MatchedID["price"])
 print("---------------------------------")
 Subtotal = sum(Prices)
+Tax = float(os.getenv("Tax", default = ".0875"))
 print("SUBTOTAL: ", to_usd(Subtotal))
-print("TAX: ", to_usd(Subtotal * .0875))
-print("TOTAL: ", to_usd(Subtotal * 1.0875))
+print("TAX: ", to_usd(Subtotal * Tax))
+print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
 print("---------------------------------")
 print("THANKS, SEE YOU AGAIN SOON!")
 print("---------------------------------")
