@@ -1,7 +1,7 @@
 # shopping_cart.py
 
-import datetime #Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
-from dotenv import load_dotenv #Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
+import datetime # Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
+from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 import os
 load_dotenv()
 
@@ -38,15 +38,15 @@ def to_usd(my_price):
     """
     return f"${my_price:,.2f}" #> $12,000.71
 
-import gspread #Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md for help with Google Sheets
+# GSPREAD
+
+import gspread # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md for help with Google Sheets
 from oauth2client.service_account import ServiceAccountCredentials
 
 DOCUMENT_ID = os.environ.get("GOOGLE_SHEET_ID", "OOPS")
 SHEET_NAME = os.environ.get("SHEET_NAME", "Products")
 
-#
 # AUTHORIZATION
-#
 
 CREDENTIALS_FILEPATH = os.path.join(os.path.dirname(__file__), "auth", "spreadsheet_credentials.json")
 
@@ -57,28 +57,28 @@ AUTH_SCOPE = [
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILEPATH, AUTH_SCOPE)
 
-#
 # READ SHEET VALUES
-#
 
-client = gspread.authorize(credentials) #> <class 'gspread.client.Client'>
+client = gspread.authorize(credentials)
 
-doc = client.open_by_key(DOCUMENT_ID) #> <class 'gspread.models.Spreadsheet'>
+doc = client.open_by_key(DOCUMENT_ID)
 
 print("-----------------")
 print("SPREADSHEET:", doc.title)
 print("-----------------")
 
-sheet = doc.worksheet(SHEET_NAME) #> <class 'gspread.models.Worksheet'>
+sheet = doc.worksheet(SHEET_NAME)
 
-products = sheet.get_all_records() #> <class 'list'>
+products = sheet.get_all_records()
 
-print("Please input a product identifier.  Type 'DONE' when finished.")
+# PROCESS USER INPUTED IDS
+
+print("Please input a product identifier.  Enter 'DONE' when finished.")
 condition = True
 SelectedIDs = []
 while condition == True:
     try:
-        UserID = input("Enter Product ID:  ")
+        UserID = input("Product ID:  ")
         if UserID.lower() == "done":
             condition = False
         else:
@@ -86,8 +86,10 @@ while condition == True:
             MatchedID = MatchedID[0]
             SelectedIDs.append(MatchedID)
     except:
-        Error = "Invalid Product ID!"
+        Error = "Invalid Product ID - Enter Valid"
         print(Error, end = " ")
+
+# OUTPUT RECEIPT
 
 print("---------------------------------")
 print("FOSTER QUICKMART")
@@ -95,7 +97,7 @@ print("WWW.FOSTER-QUICKMART.COM")
 print("---------------------------------")
 date = datetime.date.today()
 time = datetime.datetime.now()
-print("CHECKOUT AT: ", date, time.strftime("%H:%M %p"))
+print("CHECKOUT AT: ", date, time.strftime("%I:%M %p"))
 print("---------------------------------")
 print("SELECTED PRODUCTS:")
 Prices = []
