@@ -1,4 +1,4 @@
-# Shopping Cart
+# Shopping Cart Project
 
 ## Installation
 
@@ -13,6 +13,10 @@ cd ~/Documents/OPIM-243/GitHub/shopping-cart
 
 Setup a virtual enviorment called something like "shopping-env" and from within it install gspread & dotenv packages
 
+https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md
+
+https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/challenges.md#integrating-with-a-google-sheets-datastore
+
 ```sh
 conda create -n shopping-env python=3.7 # (first time only)
 conda activate shopping-env
@@ -21,6 +25,10 @@ pip install gspread oauth2client
 
 pip install python-dotenv
 ```
+### Credentials Setup
+
+
+
 ## Usage
 
 Run the Shopping Cart Program
