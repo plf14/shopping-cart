@@ -13,9 +13,9 @@ cd ~/Documents/OPIM-243/GitHub/shopping-cart
 
 Setup a virtual enviorment called something like "shopping-env" and from within it install gspread & dotenv packages
 
-https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md
+gspread:  https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md
 
-https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/challenges.md#integrating-with-a-google-sheets-datastore
+dotenv:  https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/challenges.md#integrating-with-a-google-sheets-datastore
 
 ```sh
 conda create -n shopping-env python=3.7 # (first time only)
@@ -25,9 +25,16 @@ pip install gspread oauth2client
 
 pip install python-dotenv
 ```
-### Credentials Setup
+### .env Setup
 
+You must create a .env file and insert the following
 
+```sh
+GOOGLE_SHEET_ID = "1ItN7Cc2Yn4K90cMIsxi2P045Gzw0y2JHB_EkV4mXXpI"
+SHEET_NAME = "products-custom"
+Tax = ".0875"
+```
+Optionally you can customize these variables to apply to your own product list or local tax rate.
 
 ## Usage
 
