@@ -1,5 +1,9 @@
 # Shopping Cart Project
 
+## Overview
+
+This program functions as a checkout function for a business.  Users are prompted to enter 'Product IDs' of a customer's selected items.  After entering all product IDs, the program outputs a comprehesive receipt including information about the business, checkout time, items selected and their respective prices, subtotal, tax, and total.
+
 ## Installation
 
 Fork this repo, then clone your fork to download it locally onto your computer.  Then navigate there from the command line.
