@@ -27,7 +27,7 @@ pip install python-dotenv
 ```
 ### .env Setup
 
-You must create a .env file and insert the following
+Use your text editor or the command-line to create a file in that repo called ".env", and then place the following contents inside:
 
 ```sh
 GOOGLE_SHEET_ID = "1ItN7Cc2Yn4K90cMIsxi2P045Gzw0y2JHB_EkV4mXXpI"
