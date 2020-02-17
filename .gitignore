@@ -1,5 +1,5 @@
 #Google Authorization
-git rm --cached /auth/spreadsheet_credentials.json
+/auth/spreadsheet_credentials.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
