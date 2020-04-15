@@ -1,9 +1,14 @@
 # shopping_cart.py
+# test
+#SETUP
 
 import datetime # Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
-from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 import os
+from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 load_dotenv()
+date = datetime.date.today()
+time = datetime.datetime.now()
+Tax = float(os.getenv("Tax", default = ".0875"))
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -38,78 +43,57 @@ def to_usd(my_price):
     """
     return f"${my_price:,.2f}" #> $12,000.71
 
-# GSPREAD
+def human_friendly_timestamp(time):
+    """
+    Converts raw time data to standard 12-hour time, for printing and display purposes.
+    """
+    return time.strftime("%I:%M %p")
 
-import gspread # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md for help with Google Sheets
-from oauth2client.service_account import ServiceAccountCredentials
-
-DOCUMENT_ID = os.environ.get("GOOGLE_SHEET_ID", "OOPS")
-SHEET_NAME = os.environ.get("SHEET_NAME", "Products")
-
-# AUTHORIZATION
-
-CREDENTIALS_FILEPATH = os.path.join(os.path.dirname(__file__), "auth", "spreadsheet_credentials.json")
-
-AUTH_SCOPE = [
-    "https://www.googleapis.com/auth/spreadsheets", #> Allows read/write access to the user's sheets and their properties.
-    "https://www.googleapis.com/auth/drive.file" #> Per-file access to files created or opened by the app.
-]
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILEPATH, AUTH_SCOPE)
-
-# READ SHEET VALUES
-
-client = gspread.authorize(credentials)
-
-doc = client.open_by_key(DOCUMENT_ID)
-
-print("-----------------")
-print("SPREADSHEET:", doc.title)
-print("-----------------")
-
-sheet = doc.worksheet(SHEET_NAME)
-
-products = sheet.get_all_records()
+def find_product(UserID, products):
+    """
+    Matches the inputed product identifier and matches it to an existing product.
+    """
+    MatchedID = [p for p in products if str(p["id"]) == str(UserID)]
+    MatchedID = MatchedID[0]
+    return MatchedID
 
 # PROCESS USER INPUTED IDS
 
-print("Please input a product identifier.  Enter 'DONE' when finished.")
-condition = True
-SelectedIDs = []
-while condition == True:
-    try:
-        UserID = input("Product ID:  ")
-        if UserID.lower() == "done":
-            condition = False
-        else:
-            MatchedID = [p for p in products if str(p["id"]) == str(UserID)]
-            MatchedID = MatchedID[0]
-            SelectedIDs.append(MatchedID)
-    except:
-        Error = "Invalid Product ID - Enter Valid"
-        print(Error, end = " ")
+if __name__ == "__main__":
 
-# OUTPUT RECEIPT
+    print("Please input a product identifier.  Enter 'DONE' when finished.")
+    condition = True
+    SelectedIDs = []
+    while condition == True:
+        try:
+            UserID = input("Product ID:  ")
+            if UserID.lower() == "done":
+                condition = False
+            else:
+                MatchedID = find_product(UserID, products)
+                SelectedIDs.append(MatchedID)
+        except:
+            Error = "Invalid Product ID - Enter Valid"
+            print(Error, end = " ")
 
-print("---------------------------------")
-print("FOSTER QUICKMART")
-print("WWW.FOSTER-QUICKMART.COM")
-print("---------------------------------")
-date = datetime.date.today()
-time = datetime.datetime.now()
-print("CHECKOUT AT: ", date, time.strftime("%I:%M %p"))
-print("---------------------------------")
-print("SELECTED PRODUCTS:")
-Prices = []
-for MatchedID in SelectedIDs:
-    print(" ... " + MatchedID["name"], " (" + to_usd(MatchedID["price"]) + ")")
-    Prices.append(MatchedID["price"])
-print("---------------------------------")
-Subtotal = sum(Prices)
-Tax = float(os.getenv("Tax", default = ".0875"))
-print("SUBTOTAL: ", to_usd(Subtotal))
-print("TAX: ", to_usd(Subtotal * Tax))
-print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
-print("---------------------------------")
-print("THANKS, SEE YOU AGAIN SOON!")
-print("---------------------------------")
+    # OUTPUT RECEIPT
+
+    print("---------------------------------")
+    print("FOSTER QUICKMART")
+    print("WWW.FOSTER-QUICKMART.COM")
+    print("---------------------------------")
+    print("CHECKOUT AT: ", date, human_friendly_timestamp(time))
+    print("---------------------------------")
+    print("SELECTED PRODUCTS:")
+    Prices = []
+    for MatchedID in SelectedIDs:
+        print(" ... " + MatchedID["name"], " (" + to_usd(MatchedID["price"]) + ")")
+        Prices.append(MatchedID["price"])
+    print("---------------------------------")
+    Subtotal = sum(Prices)
+    print("SUBTOTAL: ", to_usd(Subtotal))
+    print("TAX: ", to_usd(Subtotal * Tax))
+    print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
+    print("---------------------------------")
+    print("THANKS, SEE YOU AGAIN SOON!")
+    print("---------------------------------")
