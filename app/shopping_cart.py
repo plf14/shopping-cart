@@ -3,8 +3,8 @@
 #SETUP
 
 import datetime # Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
-from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 import os
+from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 load_dotenv()
 date = datetime.date.today()
 time = datetime.datetime.now()
@@ -49,7 +49,10 @@ def human_friendly_timestamp(time):
     """
     return time.strftime("%I:%M %p")
 
-def find_product(UserID):
+def find_product(UserID, products):
+    """
+    Matches the inputed product identifier and matches it to an existing product.
+    """
     MatchedID = [p for p in products if str(p["id"]) == str(UserID)]
     MatchedID = MatchedID[0]
     return MatchedID
@@ -64,7 +67,7 @@ SHEET_NAME = os.environ.get("SHEET_NAME", "Products")
 
 # AUTHORIZATION
 
-CREDENTIALS_FILEPATH = os.path.join(os.path.dirname(__file__), "auth", "spreadsheet_credentials.json")
+CREDENTIALS_FILEPATH = os.path.join(os.path.dirname(__file__), "..", "auth", "spreadsheet_credentials.json")
 
 AUTH_SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets", #> Allows read/write access to the user's sheets and their properties.
@@ -96,7 +99,7 @@ while condition == True:
         if UserID.lower() == "done":
             condition = False
         else:
-            MatchedID = find_product(UserID)
+            MatchedID = find_product(UserID, products)
             SelectedIDs.append(MatchedID)
     except:
         Error = "Invalid Product ID - Enter Valid"
