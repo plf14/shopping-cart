@@ -19,13 +19,11 @@ def test_to_usd():
 
 def test_human_friendly_timestamp():
     time = datetime.datetime(1776,7,4,11,36,42)
-    time2 = datetime.datetime(1776,7,4,14,32,17)
+
     result = human_friendly_timestamp(time)
-    result2 = human_friendly_timestamp(time2)
+
     # it should display a properly formatted time
     assert result == "11:36 AM"
-    # it should properly display AM/PM
-    assert result2 == "02:32 PM"
 
 def test_find_product():
     products = [
