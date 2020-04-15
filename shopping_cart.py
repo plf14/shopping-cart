@@ -1,9 +1,14 @@
 # shopping_cart.py
 
+#SETUP
+
 import datetime # Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
 from dotenv import load_dotenv # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/dotenv.md for .env variables
 import os
 load_dotenv()
+date = datetime.date.today()
+time = datetime.datetime.now()
+Tax = float(os.getenv("Tax", default = ".0875"))
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -38,6 +43,17 @@ def to_usd(my_price):
     """
     return f"${my_price:,.2f}" #> $12,000.71
 
+def human_friendly_timestamp(time):
+    """
+    Converts raw time data to standard 12-hour time, for printing and display purposes.
+    """
+    return time.strftime("%I:%M %p")
+
+def find_product(UserID):
+    MatchedID = [p for p in products if str(p["id"]) == str(UserID)]
+    MatchedID = MatchedID[0]
+    return MatchedID
+    
 # GSPREAD
 
 import gspread # Used https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/gspread.md for help with Google Sheets
@@ -60,7 +76,6 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILEP
 # READ SHEET VALUES
 
 client = gspread.authorize(credentials)
-
 doc = client.open_by_key(DOCUMENT_ID)
 
 print("-----------------")
@@ -68,7 +83,6 @@ print("SPREADSHEET:", doc.title)
 print("-----------------")
 
 sheet = doc.worksheet(SHEET_NAME)
-
 products = sheet.get_all_records()
 
 # PROCESS USER INPUTED IDS
@@ -82,8 +96,7 @@ while condition == True:
         if UserID.lower() == "done":
             condition = False
         else:
-            MatchedID = [p for p in products if str(p["id"]) == str(UserID)]
-            MatchedID = MatchedID[0]
+            MatchedID = find_product(UserID)
             SelectedIDs.append(MatchedID)
     except:
         Error = "Invalid Product ID - Enter Valid"
@@ -95,9 +108,7 @@ print("---------------------------------")
 print("FOSTER QUICKMART")
 print("WWW.FOSTER-QUICKMART.COM")
 print("---------------------------------")
-date = datetime.date.today()
-time = datetime.datetime.now()
-print("CHECKOUT AT: ", date, time.strftime("%I:%M %p"))
+print("CHECKOUT AT: ", date, human_friendly_timestamp(time))
 print("---------------------------------")
 print("SELECTED PRODUCTS:")
 Prices = []
@@ -106,7 +117,6 @@ for MatchedID in SelectedIDs:
     Prices.append(MatchedID["price"])
 print("---------------------------------")
 Subtotal = sum(Prices)
-Tax = float(os.getenv("Tax", default = ".0875"))
 print("SUBTOTAL: ", to_usd(Subtotal))
 print("TAX: ", to_usd(Subtotal * Tax))
 print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
