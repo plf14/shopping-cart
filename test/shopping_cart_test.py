@@ -18,9 +18,14 @@ def test_to_usd():
     assert to_usd(1234567890.5555555) == "$1,234,567,890.56"
 
 def test_human_friendly_timestamp():
-    result = human_friendly_timestamp(datetime.datetime.now())
-    # it should be no longer than 8 characters
-    assert len(result) == 8
+    time = datetime.datetime(1776,7,4,11,36,42)
+    time2 = datetime.datetime(1776,7,4,14,32,17)
+    result = human_friendly_timestamp(time)
+    result2 = human_friendly_timestamp(time2)
+    # it should display a properly formatted time
+    assert result == "11:36 AM"
+    # it should properly display AM/PM
+    assert result2 == "02:32 PM"
 
 def test_find_product():
     products = [
