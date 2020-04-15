@@ -90,39 +90,41 @@ products = sheet.get_all_records()
 
 # PROCESS USER INPUTED IDS
 
-print("Please input a product identifier.  Enter 'DONE' when finished.")
-condition = True
-SelectedIDs = []
-while condition == True:
-    try:
-        UserID = input("Product ID:  ")
-        if UserID.lower() == "done":
-            condition = False
-        else:
-            MatchedID = find_product(UserID, products)
-            SelectedIDs.append(MatchedID)
-    except:
-        Error = "Invalid Product ID - Enter Valid"
-        print(Error, end = " ")
+if __name__ == "__main__":
 
-# OUTPUT RECEIPT
+    print("Please input a product identifier.  Enter 'DONE' when finished.")
+    condition = True
+    SelectedIDs = []
+    while condition == True:
+        try:
+            UserID = input("Product ID:  ")
+            if UserID.lower() == "done":
+                condition = False
+            else:
+                MatchedID = find_product(UserID, products)
+                SelectedIDs.append(MatchedID)
+        except:
+            Error = "Invalid Product ID - Enter Valid"
+            print(Error, end = " ")
 
-print("---------------------------------")
-print("FOSTER QUICKMART")
-print("WWW.FOSTER-QUICKMART.COM")
-print("---------------------------------")
-print("CHECKOUT AT: ", date, human_friendly_timestamp(time))
-print("---------------------------------")
-print("SELECTED PRODUCTS:")
-Prices = []
-for MatchedID in SelectedIDs:
-    print(" ... " + MatchedID["name"], " (" + to_usd(MatchedID["price"]) + ")")
-    Prices.append(MatchedID["price"])
-print("---------------------------------")
-Subtotal = sum(Prices)
-print("SUBTOTAL: ", to_usd(Subtotal))
-print("TAX: ", to_usd(Subtotal * Tax))
-print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
-print("---------------------------------")
-print("THANKS, SEE YOU AGAIN SOON!")
-print("---------------------------------")
+    # OUTPUT RECEIPT
+
+    print("---------------------------------")
+    print("FOSTER QUICKMART")
+    print("WWW.FOSTER-QUICKMART.COM")
+    print("---------------------------------")
+    print("CHECKOUT AT: ", date, human_friendly_timestamp(time))
+    print("---------------------------------")
+    print("SELECTED PRODUCTS:")
+    Prices = []
+    for MatchedID in SelectedIDs:
+        print(" ... " + MatchedID["name"], " (" + to_usd(MatchedID["price"]) + ")")
+        Prices.append(MatchedID["price"])
+    print("---------------------------------")
+    Subtotal = sum(Prices)
+    print("SUBTOTAL: ", to_usd(Subtotal))
+    print("TAX: ", to_usd(Subtotal * Tax))
+    print("TOTAL: ", to_usd(Subtotal * (1 + Tax)))
+    print("---------------------------------")
+    print("THANKS, SEE YOU AGAIN SOON!")
+    print("---------------------------------")
