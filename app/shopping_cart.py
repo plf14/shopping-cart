@@ -1,5 +1,5 @@
 # shopping_cart.py
-
+#Code Climate
 #SETUP
 
 import datetime # Used https://stackabuse.com/how-to-format-dates-in-python/ for datetime
